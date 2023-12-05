@@ -5,6 +5,7 @@ module.exports = {
     'import/order': 2,
     'import/no-extraneous-dependencies': 0,
     '@typescript-eslint/no-explicit-any': 1,
+    'react-hooks/exhaustive-deps': 0,
   },
   overrides: [
     {
