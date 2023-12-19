@@ -1,0 +1,16 @@
+{
+  "screens": {
+    "home": {
+      "title": "All notes",
+      "subTitle": "{{count}} notes"
+    },
+    "notes": {
+      "heading": "Heading",
+      "placeHolderText": "Add your note here..."
+    }
+  },
+  "tabs": {
+    "notes": "Notes",
+    "todos": "To-dos"
+  }
+}
