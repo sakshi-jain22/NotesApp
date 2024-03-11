@@ -13,7 +13,7 @@ export interface INotesItem {
   date: string;
   image?: ImageSourcePropType;
   showImage?: boolean;
-  id: number;
+  id?: string;
 }
 
 export type StackScreenNames = [SCREENS.HOME, SCREENS.NOTES];
