@@ -1,4 +1,5 @@
 import { Instance, types } from 'mobx-state-tree';
+import { toJS } from 'mobx';
 
 import { INotesItem } from 'src/types';
 
@@ -48,6 +49,32 @@ export const RootStoreModel = types
         if (notesIndex !== -1) {
           self.Notes.splice(notesIndex, 1);
         }
+      },
+      sortByTimeCreated: () => {
+        // TODO: Need to test the sorting functionality.
+        console.log('1. Notes in array: ', JSON.stringify(toJS(self.Notes)));
+
+        self.Notes.sort((note1, note2) => {
+          const date1 = new Date(note1.id);
+          const date2 = new Date(note2.id);
+          return date1 - date2;
+        });
+        console.log(
+          '1. self.notes after sortByTimeCreated: ',
+          JSON.stringify(toJS(self.Notes)),
+        );
+      },
+      sortByTimeEdited: () => {
+        console.log('2. Notes in array: ', JSON.stringify(toJS(self.Notes)));
+        self.Notes.sort((note1, note2) => {
+          const date1 = new Date(note1.date);
+          const date2 = new Date(note2.date);
+          return date1 - date2;
+        });
+        console.log(
+          '2. self.notes after sortByTimeEdited: ',
+          JSON.stringify(toJS(self.Notes)),
+        );
       },
     };
   })
