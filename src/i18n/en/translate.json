@@ -12,5 +12,12 @@
   "tabs": {
     "notes": "Notes",
     "todos": "To-dos"
+  },
+  "options": {
+    "delete": "Delete",
+    "edit": "Edit",
+    "sortCreated": "Sort by time created",
+    "sortEdited": "Sort by time edited",
+    "share": "Share"
   }
 }

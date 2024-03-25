@@ -1,10 +1,11 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import {
-  View,
   SafeAreaView,
+  Share,
   StatusBar,
   TextInput,
   TextInputProps,
+  View,
 } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import ScreenHeader from '../../components/ScreenHeader';
 
 import useTheme from '../../hooks/useTheme';
+import OptionsModal from '../../components/OptionsModal';
 import { useStores } from '../../models';
 import { COLOR } from '../../constants/color';
 import { SCREENS } from '../../constants/path';
@@ -41,18 +43,50 @@ const NotesScreen: React.FC<INotesScreen> = (props) => {
 
   const { backgroundStyle, isDarkMode } = useTheme();
   const [titleText, setTitleText] = useState(title);
+  const [isModalVisible, setModalVisible] = useState(false);
   const [shouldRenderSaveBtn, updateRenderSaveBtn] = useState(false);
   const [noteText, setNoteText] = useState(note);
   const titleRef = useRef<TextInput & TextInputProps>(null);
   const noteRef = useRef<TextInput & TextInputProps>(null);
   const styles = getStyles(isDarkMode);
 
+  const sharePressHandler = async () => {
+    await Share.share({ title, message: title + '\n' + note });
+  };
+
+  const deletePressHandler = () => {
+    store.deleteNote(id);
+    navigation.navigate(SCREENS.HOME, {});
+  };
+
+  const editPressHandler = () => {
+    noteRef.current?.focus();
+  };
+
+  const screenOptions = [
+    {
+      label: 'options.delete',
+      id: 1,
+      pressHandler: deletePressHandler,
+    },
+    {
+      label: 'options.edit',
+      id: 2,
+      pressHandler: editPressHandler,
+    },
+    {
+      label: 'options.share',
+      id: 3,
+      pressHandler: sharePressHandler,
+    },
+  ];
+
   const backPressHandler = useCallback(() => {
     navigation.goBack();
   }, []);
 
   const menuPressHandler = useCallback(() => {
-    console.log('pressed');
+    setModalVisible(!isModalVisible);
   }, []);
 
   const savePressHandler = useCallback(() => {
@@ -116,11 +150,17 @@ const NotesScreen: React.FC<INotesScreen> = (props) => {
       <ScreenHeader
         handleBackPress={backPressHandler}
         handleMenuPress={menuPressHandler}
+        handleSharePress={sharePressHandler}
         handleSavePress={savePressHandler}
         showBack
         showCloseIcon={shouldCreateNote}
         showShare={!shouldRenderSaveBtn}
         showSave={shouldRenderSaveBtn}
+      />
+      <OptionsModal
+        isModalVisible={isModalVisible}
+        updateModalVisible={setModalVisible}
+        options={screenOptions}
       />
       <View style={styles.bodyStyles}>
         <TextInput

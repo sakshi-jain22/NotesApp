@@ -1,23 +1,25 @@
 import React from 'react';
 import { View, FlatList, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { observer } from 'mobx-react-lite';
 
 import NotesItem from '../NotesItem';
 
 import useTheme from '../../hooks/useTheme';
-import { useStores } from '../../models';
 import { INotesItem } from '../../types';
 import { SCREENS } from '../../../src/constants/path';
 import { NotesScreenNavigationProp } from '../../types';
 
 import { getStyles } from './styles';
 
-const NotesList = () => {
+interface INotesList {
+  data: Array<INotesItem>;
+}
+
+const NotesList: React.FC<INotesList> = (props) => {
+  const { data } = props;
   const navigation = useNavigation<NotesScreenNavigationProp>();
   const { isDarkMode } = useTheme();
   const styles = getStyles(isDarkMode);
-  const store = useStores();
 
   const notesPressHandler = (item: INotesItem) => () =>
     navigation.navigate(SCREENS.NOTES, {
@@ -40,7 +42,7 @@ const NotesList = () => {
 
   return (
     <FlatList
-      data={store.Notes}
+      data={data}
       renderItem={renderItem}
       style={styles.list}
       showsVerticalScrollIndicator={false}
@@ -48,4 +50,4 @@ const NotesList = () => {
   );
 };
 
-export default observer(NotesList);
+export default NotesList;

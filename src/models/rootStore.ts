@@ -1,10 +1,10 @@
-import { Instance, types } from 'mobx-state-tree';
+import { IAnyModelType, Instance, types } from 'mobx-state-tree';
 
 import { INotesItem } from 'src/types';
 
 import { NotesModel } from './NotesStore/notesStore';
 
-export const RootStoreModel = types
+export const RootStoreModel: IAnyModelType = types
   .model('RootStore')
   //   .extend(withEnvironment)
   .props({ Notes: types.array(NotesModel) })
@@ -48,6 +48,26 @@ export const RootStoreModel = types
         if (notesIndex !== -1) {
           self.Notes.splice(notesIndex, 1);
         }
+      },
+      sortByTimeCreated: (toggledOrder: boolean) => {
+        self.Notes.sort((note1, note2) => {
+          const date1 = note1.id;
+          const date2 = note2.id;
+
+          return toggledOrder
+            ? date1.localeCompare(date2)
+            : date2.localeCompare(date1);
+        });
+      },
+      sortByTimeEdited: (toggledOrder: boolean) => {
+        self.Notes.sort((note1, note2) => {
+          const date1 = note1.date;
+          const date2 = note2.date;
+
+          return toggledOrder
+            ? date1.localeCompare(date2)
+            : date2.localeCompare(date1);
+        });
       },
     };
   })
