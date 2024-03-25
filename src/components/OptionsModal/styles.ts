@@ -21,7 +21,7 @@ export const getStyles = (isDarkMode: boolean) =>
       borderRadius: 10,
       right: 10,
       top: 10,
-      minWidth: 150,
+      minWidth: 180,
     },
     modalStyle: {
       margin: 80,
@@ -39,10 +39,14 @@ export const getStyles = (isDarkMode: boolean) =>
     },
     buttonStyle: {
       margin: 8,
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
     },
     textStyle: {
       color: isDarkMode ? COLOR.SNOW_WHITE : COLOR.EERIE_BLACK,
       fontSize: 14,
       fontWeight: '500',
     },
+    optionIcon: {},
   });

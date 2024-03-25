@@ -1,11 +1,10 @@
-import { Instance, types } from 'mobx-state-tree';
-import { toJS } from 'mobx';
+import { IAnyModelType, Instance, types } from 'mobx-state-tree';
 
 import { INotesItem } from 'src/types';
 
 import { NotesModel } from './NotesStore/notesStore';
 
-export const RootStoreModel = types
+export const RootStoreModel: IAnyModelType = types
   .model('RootStore')
   //   .extend(withEnvironment)
   .props({ Notes: types.array(NotesModel) })
@@ -50,31 +49,25 @@ export const RootStoreModel = types
           self.Notes.splice(notesIndex, 1);
         }
       },
-      sortByTimeCreated: () => {
-        // TODO: Need to test the sorting functionality.
-        console.log('1. Notes in array: ', JSON.stringify(toJS(self.Notes)));
+      sortByTimeCreated: (toggledOrder: boolean) => {
+        self.Notes.sort((note1, note2) => {
+          const date1 = note1.id;
+          const date2 = note2.id;
 
-        self.Notes.sort((note1, note2) => {
-          const date1 = new Date(note1.id);
-          const date2 = new Date(note2.id);
-          return date1 - date2;
+          return toggledOrder
+            ? date1.localeCompare(date2)
+            : date2.localeCompare(date1);
         });
-        console.log(
-          '1. self.notes after sortByTimeCreated: ',
-          JSON.stringify(toJS(self.Notes)),
-        );
       },
-      sortByTimeEdited: () => {
-        console.log('2. Notes in array: ', JSON.stringify(toJS(self.Notes)));
+      sortByTimeEdited: (toggledOrder: boolean) => {
         self.Notes.sort((note1, note2) => {
-          const date1 = new Date(note1.date);
-          const date2 = new Date(note2.date);
-          return date1 - date2;
+          const date1 = note1.date;
+          const date2 = note2.date;
+
+          return toggledOrder
+            ? date1.localeCompare(date2)
+            : date2.localeCompare(date1);
         });
-        console.log(
-          '2. self.notes after sortByTimeEdited: ',
-          JSON.stringify(toJS(self.Notes)),
-        );
       },
     };
   })

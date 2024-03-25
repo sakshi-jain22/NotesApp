@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Text, SafeAreaView, View, StatusBar } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -16,35 +16,47 @@ import { SCREENS } from '../../constants/path';
 
 import { getStyles } from './styles';
 
-interface IHomeScreen {
-  count?: number;
-}
+interface IHomeScreen {}
 
-const HomeScreen: React.FC<IHomeScreen> = (props) => {
+const HomeScreen: React.FC<IHomeScreen> = () => {
   const { t } = useTranslation();
   const { backgroundStyle, isDarkMode } = useTheme();
   const navigation = useNavigation<NotesScreenNavigationProp>();
   const rootStore = useStores();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [sortByCreateOrder, updateSortByCreateOrder] = useState(false);
+  const [sortByEditOrder, updateSortByEditOrder] = useState(false);
   const styles = getStyles(isDarkMode);
 
   const menuBtnPressHandler = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const onSortByCreatePress = () => {
-    rootStore.sortByTimeCreated();
+  const onSortByCreatePress = useCallback(() => {
+    rootStore.sortByTimeCreated(sortByCreateOrder);
+    updateSortByCreateOrder(!sortByCreateOrder);
     navigation.navigate(SCREENS.HOME, {});
-  };
+  }, [sortByCreateOrder]);
 
-  const onSortByEditPress = () => {
-    rootStore.sortByTimeEdited();
+  const onSortByEditPress = useCallback(() => {
+    rootStore.sortByTimeEdited(sortByEditOrder);
+    updateSortByEditOrder(!sortByEditOrder);
     navigation.navigate(SCREENS.HOME, {});
-  };
+  }, [sortByEditOrder]);
 
   const screenOptions = [
-    { label: 'options.sortCreated', id: 1, pressHandler: onSortByCreatePress },
-    { label: 'options.sortEdited', id: 2, pressHandler: onSortByEditPress },
+    {
+      label: 'options.sortCreated',
+      id: 1,
+      pressHandler: onSortByCreatePress,
+      icon: sortByCreateOrder ? 'arrowup' : 'arrowdown',
+    },
+    {
+      label: 'options.sortEdited',
+      id: 2,
+      pressHandler: onSortByEditPress,
+      icon: sortByEditOrder ? 'arrowup' : 'arrowdown',
+    },
   ];
 
   return (
